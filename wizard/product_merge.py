@@ -1,4 +1,4 @@
-# ©  2020 Deltatech
+# ©  2008-2021 Deltatech
 # See README.rst file on addons root folder for license details
 
 
@@ -28,11 +28,11 @@ class MergeProduct(models.TransientModel):
 
     @api.model
     def default_get(self, fields_list):
-        res = super(MergeProduct, self).default_get(fields_list)
+        res = super().default_get(fields_list)
         active_ids = self.env.context.get("active_ids")
         if self.env.context.get("active_model") == "product.product" and active_ids:
             res["state"] = "selection"
-            res["object_ids"] = active_ids
+            res["object_ids"] = [(6, 0, active_ids)]
             res["dst_object_id"] = self._get_ordered_object(active_ids)[-1].id
         if self.env.context.get("active_model") == "product.template" and active_ids:
             templates = self.env["product.template"].browse(active_ids)
@@ -40,6 +40,6 @@ class MergeProduct(models.TransientModel):
             for template in templates:
                 active_ids += template.product_variant_ids.ids
             res["state"] = "selection"
-            res["object_ids"] = active_ids
+            res["object_ids"] = [(6, 0, active_ids)]
             res["dst_object_id"] = self._get_ordered_object(active_ids)[-1].id
         return res
